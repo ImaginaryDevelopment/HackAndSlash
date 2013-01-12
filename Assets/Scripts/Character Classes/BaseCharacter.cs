@@ -67,14 +67,18 @@ public class BaseCharacter : MonoBehaviour {
 	}
 	void SetupPrimaryAttributes(){
 		SetupStat(_primaryAttribute);
+		
 	}
 	
 	void SetupVitals(){
+		
 		SetupStat(_vital);
+		SetupVitalModifiers();
 	}
 	
 	void SetupSkills(){
 		SetupStat(_skill);
+		SetupSkillModifiers();
 	}
 	void AddModifier<T>(T item,Func<T,ModifiedStat> getter, float ratio,params AttributeName[] attributes) 
 		where T:struct

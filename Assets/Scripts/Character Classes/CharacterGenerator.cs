@@ -5,18 +5,25 @@ public class CharacterGenerator : MonoBehaviour {
 	PlayerCharacter _toon;
 	const int STARTING_POINTS=350;
 	const int MIN_STARTING_ATTRIBUTE_VALUE=10;
+	const int STARTING_VALUE = 50;
 	int pointsLeft=STARTING_POINTS;
+	
 	// Use this for initialization
 	void Start () {
 		_toon = new PlayerCharacter();
 		_toon.Awake();
 		for(var cnt= 0; cnt< Enum.GetValues(typeof(AttributeName)).Length;cnt++)
-			_toon.GetPrimaryAttribute(cnt).BaseValue=MIN_STARTING_ATTRIBUTE_VALUE;
+		{
+			_toon.GetPrimaryAttribute(cnt).BaseValue=STARTING_VALUE;
+			pointsLeft-=(STARTING_VALUE - MIN_STARTING_ATTRIBUTE_VALUE);
+		}	
+		
+		_toon.StatUpdate();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
 	
 	void OnGUI() {
@@ -29,7 +36,7 @@ public class CharacterGenerator : MonoBehaviour {
 	
 	void DisplayName(){
 		GUI.Label(new Rect(10,10,50,25),"Name:");
-		_toon.Name= GUI.TextArea(new Rect(65,10,100,25),_toon.Name);
+		_toon.Name= GUI.TextField(new Rect(65,10,100,25),_toon.Name);
 	}
 	void DisplayPointsLeft(){
 		GUI.Label(new Rect(250,10,100,25),"Points Left: " + pointsLeft);
@@ -47,6 +54,7 @@ public class CharacterGenerator : MonoBehaviour {
 				if( _toon.GetPrimaryAttribute(cnt).BaseValue> MIN_STARTING_ATTRIBUTE_VALUE){
 					_toon.GetPrimaryAttribute(cnt).BaseValue--;
 					pointsLeft++;	
+					_toon.StatUpdate();
 				}
 				
 			}
@@ -54,6 +62,7 @@ public class CharacterGenerator : MonoBehaviour {
 			{
 				_toon.GetPrimaryAttribute(cnt).BaseValue++;
 				pointsLeft--;
+				_toon.StatUpdate();
 			}
 		}
 	
