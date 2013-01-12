@@ -1,0 +1,13 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Character Classes\BaseCharacter.cs">
+    <Files>
+      <File FileName="Assets\Scripts\Character Classes\BaseCharacter.cs" Line="33" Column="31" />
+      <File FileName="Assets\Scripts\Character Classes\ModifiedStat.cs" Line="22" Column="4" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
