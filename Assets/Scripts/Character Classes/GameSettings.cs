@@ -70,14 +70,28 @@ public class GameSettings : MonoBehaviour {
 			var name=((AttributeName)cnt).ToString();
 			var attrib=pcClass.GetPrimaryAttribute(cnt);
 			LoadBaseStat(cnt,name,attrib);
-			Debug.Log(pcClass.GetPrimaryAttribute(cnt).Name+":" +pcClass.GetPrimaryAttribute(cnt).BaseValue+ ":");
+			//Debug.Log(pcClass.GetPrimaryAttribute(cnt).Name+":" +pcClass.GetPrimaryAttribute(cnt).BaseValue+ ":");
 		}
 		
 		for (int cnt = 0; cnt < Enum.GetValues(typeof(VitalName)).Length; cnt++) {
 			var name=((VitalName)cnt).ToString();
 			var attrib=pcClass.GetVital(cnt);
 			LoadBaseStat(cnt,name,attrib);
-			attrib.CurValue=PlayerPrefs.GetInt(name+"CurValue",0);
+			string myMods=PlayerPrefs.GetString(name+"Modifiers","");
+			Debug.Log("PlayerPrefs:"+name+":"+myMods);
+			string[] mods=myMods.Split('|');
+			foreach(var m in mods)
+			{
+				var modName=m.BeforeOrSelf("_");
+				var ratio=float.Parse(m.AfterOrSelf("_"));
+				var attribModifier= pcClass.GetPrimaryAttribute((AttributeName )Enum.Parse(typeof(AttributeName), modName));
+				
+				//attrib.AddModifier(new ModifyingAttribute(){ ratio=ratio, attribute=attribModifier});
+				
+			}
+			
+			Debug.Log(name+":"+ attrib.GetModifyingAttributesToSerialize());
+			attrib.CurValue=PlayerPrefs.GetInt(name+"CurValue",20);
 		}
 		
 		for (int cnt = 0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++) {

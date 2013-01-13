@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class ModifiedStat : BaseStat {
 	int _modValue; //amount added to base after mods
@@ -10,6 +11,8 @@ public class ModifiedStat : BaseStat {
 	}
 	
 	public void AddModifier(ModifyingAttribute mod){
+		if(_mods.Any(m=>m.attribute.Name == mod.attribute.Name))
+			throw new InvalidOperationException("duplicate mod added:"+mod.attribute.Name);
 		_mods.Add(mod);
 	}
 	

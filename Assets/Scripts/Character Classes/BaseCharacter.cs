@@ -38,6 +38,10 @@ public class BaseCharacter : MonoBehaviour {
 	//take avg of player's skills and assign as the player level
 	public void CalculateLevel(){}
 	
+	public Attribute GetPrimaryAttribute(AttributeName name)
+	{
+		return _primaryAttribute[(int)name];
+	}
 	public Attribute GetPrimaryAttribute(int index)
 	{
 		return _primaryAttribute[index];
