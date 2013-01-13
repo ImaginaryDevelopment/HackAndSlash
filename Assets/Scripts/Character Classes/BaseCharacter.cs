@@ -58,26 +58,29 @@ public class BaseCharacter : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {}
 	
-	void SetupStat<T>(T[] array) 
-		where T:new()
+	void SetupStat<T>(T[] array,Func<int,string> nameMap) 
+		where T:BaseStat,new()
 	{
 		for(int cnt = 0; cnt< array.Length; cnt++){
-			array[cnt] = new T();
+			{
+				array[cnt] = new T();	
+				array[cnt].Name=nameMap(cnt);
+			}
 		}
 	}
 	void SetupPrimaryAttributes(){
-		SetupStat(_primaryAttribute);
+		SetupStat(_primaryAttribute,i=>((AttributeName)i).ToString());
 		
 	}
 	
 	void SetupVitals(){
 		
-		SetupStat(_vital);
+		SetupStat(_vital,(i) => ((VitalName)i).ToString());
 		SetupVitalModifiers();
 	}
 	
 	void SetupSkills(){
-		SetupStat(_skill);
+		SetupStat(_skill,i => ((SkillName)i).ToString());
 		SetupSkillModifiers();
 	}
 	void AddModifier<T>(T item,Func<T,ModifiedStat> getter, float ratio,params AttributeName[] attributes) 

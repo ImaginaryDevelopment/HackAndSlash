@@ -128,6 +128,8 @@ public class CharacterGenerator : MonoBehaviour {
 	void DisplayCreateButton(){
 		if(GUI.Button(new Rect(Screen.width /2 - 50,statStartingY+LINE_HEIGHT*(attributeValueCount+vitalValueCount),100,LINE_HEIGHT),"Create"))
 		{
+			GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
+			gsScript.SaveCharacterData();
 			Application.LoadLevel("initial");
 		}
 	}

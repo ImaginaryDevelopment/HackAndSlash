@@ -31,6 +31,14 @@ public class ModifiedStat : BaseStat {
 		CalculateModValue();
 	}
 	
+	public string GetModifyingAttributesToSerialize(){
+		string temp=string.Empty;
+		//foreach(var m in _mods)
+		for (int cnt = 0; cnt < _mods.Count; cnt++) {
+			UnityEngine.Debug.Log(_mods[cnt].attribute.Name);
+		}
+		return temp;
+	}
 }
 public struct ModifyingAttribute{
 		public Attribute attribute;
