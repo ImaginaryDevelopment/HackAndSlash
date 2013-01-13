@@ -18,6 +18,8 @@ public class CharacterGenerator : MonoBehaviour {
 	
 	public GUISkin mySkin;
 	
+	public GameObject playerPrefab;
+	
 	int attributeValueCount;
 	// Use this for initialization
 	void Start () {
