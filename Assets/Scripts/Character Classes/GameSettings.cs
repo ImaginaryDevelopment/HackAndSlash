@@ -8,15 +8,6 @@ public class GameSettings : MonoBehaviour {
 		//survive from game scene to game scene
 		DontDestroyOnLoad(this);
 	}
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 	
 	internal void SaveCharacterData(){
 		var pc= GameObject.Find("pc");
@@ -32,17 +23,14 @@ public class GameSettings : MonoBehaviour {
 			var vital=pcClass.GetVital(cnt);
 			var name=((VitalName)cnt).ToString();
 			PlayerPrefs.SetInt(name.ToString()+"CurValue",vital.CurValue);
-			PlayerPrefs.SetString(name+ "Modifiers", vital.GetModifyingAttributesToSerialize());
-			
-			
+			//PlayerPrefs.SetString(name+ "Modifiers", vital.GetModifyingAttributesToSerialize());
 		}
+		
 		for (int cnt = 0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++) {
 			SaveBaseStat(cnt,i=> (SkillName)i,i=> pcClass.GetSkill(i));
 			var skill=pcClass.GetSkill(cnt);
 			var name=((SkillName)cnt).ToString();
-			PlayerPrefs.SetString(name+ "Modifiers", skill.GetModifyingAttributesToSerialize());
-			
-			
+			//PlayerPrefs.SetString(name+ "Modifiers", skill.GetModifyingAttributesToSerialize());
 		}
 	}
 	
@@ -57,7 +45,7 @@ public class GameSettings : MonoBehaviour {
 		
 		stat.BaseValue=PlayerPrefs.GetInt(name+"BaseValue",0);
 		stat.ExpToLevel=PlayerPrefs.GetInt(name+"ExpToLevel",0);
-		stat.LevelModifier=PlayerPrefs.GetFloat(name+"LevelModifier",0.0f);
+		//stat.LevelModifier=PlayerPrefs.GetFloat(name+"LevelModifier",0.0f);
 	}
 	
 	internal void LoadCharacterData(){
@@ -77,27 +65,17 @@ public class GameSettings : MonoBehaviour {
 			var name=((VitalName)cnt).ToString();
 			var attrib=pcClass.GetVital(cnt);
 			LoadBaseStat(cnt,name,attrib);
-			string myMods=PlayerPrefs.GetString(name+"Modifiers","");
-			Debug.Log("PlayerPrefs:"+name+":"+myMods);
-			string[] mods=myMods.Split('|');
-			foreach(var m in mods)
-			{
-				var modName=m.BeforeOrSelf("_");
-				var ratio=float.Parse(m.AfterOrSelf("_"));
-				var attribModifier= pcClass.GetPrimaryAttribute((AttributeName )Enum.Parse(typeof(AttributeName), modName));
-				
-				//attrib.AddModifier(new ModifyingAttribute(){ ratio=ratio, attribute=attribModifier});
-				
-			}
-			
-			Debug.Log(name+":"+ attrib.GetModifyingAttributesToSerialize());
-			attrib.CurValue=PlayerPrefs.GetInt(name+"CurValue",20);
+			//so that adjustedbase will be higher than previous curValue
+			attrib.Update();
+			attrib.CurValue=PlayerPrefs.GetInt(name+"CurValue",1);
+			Debug.Log(name+": "+attrib.CurValue);
 		}
 		
 		for (int cnt = 0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++) {
 			var name=((SkillName)cnt).ToString();
 			var attrib=pcClass.GetSkill(cnt);
 			LoadBaseStat(cnt,name,attrib);
+			
 			//pcClass.GetSkill(cnt).BaseValue=PlayerPrefs.GetInt(name+"BaseValue",0);
 		}
 		
