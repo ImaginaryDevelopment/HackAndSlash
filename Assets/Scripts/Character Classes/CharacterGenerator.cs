@@ -21,11 +21,17 @@ public class CharacterGenerator : MonoBehaviour {
 	public GameObject playerPrefab;
 	
 	int attributeValueCount;
+	int vitalValueCount;
 	// Use this for initialization
 	void Start () {
-		_toon = new PlayerCharacter();
+		var pc = Instantiate(playerPrefab,Vector3.zero,Quaternion.identity);
+		
+		pc.name="pc";
+		
+		_toon = (pc as GameObject).GetComponent<PlayerCharacter>();
 		_toon.Awake();
 		attributeValueCount=Enum.GetValues(typeof(AttributeName)).Length;
+		vitalValueCount=Enum.GetValues(typeof(VitalName)).Length;
 		for(var cnt= 0; cnt<attributeValueCount ;cnt++)
 		{
 			_toon.GetPrimaryAttribute(cnt).BaseValue=STARTING_VALUE;
@@ -48,6 +54,7 @@ public class CharacterGenerator : MonoBehaviour {
 		
 		DisplayVitals();
 		DisplaySkills(right+OFFSET*2);
+		DisplayCreateButton();
 	}
 	
 	void DisplayName(){
@@ -106,6 +113,7 @@ public class CharacterGenerator : MonoBehaviour {
 				_toon.GetVital(cnt).AdjustedBaseValue.ToString());
 		}
 	}
+	
 	void DisplaySkills(int left){
 		
 		
@@ -115,6 +123,12 @@ public class CharacterGenerator : MonoBehaviour {
 			GUI.Label(new Rect(left,top,STAT_LABEL_WIDTH,LINE_HEIGHT),((SkillName)cnt).ToString());
 			//_toon.GetPrimaryAttribute(cnt).BaseValue=
 			GUI.Label(new Rect(left+STAT_LABEL_WIDTH+OFFSET,top,30 ,LINE_HEIGHT),_toon.GetSkill(cnt).AdjustedBaseValue.ToString());
+		}
+	}
+	void DisplayCreateButton(){
+		if(GUI.Button(new Rect(Screen.width /2 - 50,statStartingY+LINE_HEIGHT*(attributeValueCount+vitalValueCount),100,LINE_HEIGHT),"Create"))
+		{
+			Application.LoadLevel("initial");
 		}
 	}
 }

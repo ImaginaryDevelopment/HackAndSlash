@@ -18,7 +18,9 @@ public class GameSettings : MonoBehaviour {
 	}
 	
 	void SaveCharacterData(){
-		//PlayerPrefs.SetString("Player Name",);
+		var pc= GameObject.Find("pc");
+		var pcClass = pc.GetComponent<PlayerCharacter>();
+		PlayerPrefs.SetString("Player Name",pcClass.Name);
 	}
 	
 	void LoadCharacterData(){
