@@ -44,7 +44,7 @@ public class GameSettings : MonoBehaviour {
 	void LoadBaseStat(int cnt,string name,BaseStat stat){
 		
 		stat.BaseValue=PlayerPrefs.GetInt(name+"BaseValue",0);
-		stat.ExpToLevel=PlayerPrefs.GetInt(name+"ExpToLevel",0);
+		stat.ExpToLevel=PlayerPrefs.GetInt(name+"ExpToLevel",Attribute.STARTING_EXP_COST);
 		//stat.LevelModifier=PlayerPrefs.GetFloat(name+"LevelModifier",0.0f);
 	}
 	

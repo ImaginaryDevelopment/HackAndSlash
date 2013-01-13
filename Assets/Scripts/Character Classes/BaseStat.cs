@@ -1,13 +1,13 @@
 
 //http://www.burgzergarcade.com/tutorials/game-design/011-unity3d-tutorial-character-statistics-17
 public class BaseStat {
-
+	public const int STARTING_EXP_COST = 100;
 	public string Name{get;set;}
 	
 	
 	public BaseStat(){
 		LevelModifier = 1.1f; // 10 % more per level
-		ExpToLevel=100;
+		ExpToLevel=STARTING_EXP_COST;
 		Name=string.Empty;
 	}
 	
