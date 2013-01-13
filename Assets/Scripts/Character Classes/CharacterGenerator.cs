@@ -7,12 +7,19 @@ public class CharacterGenerator : MonoBehaviour {
 	const int MIN_STARTING_ATTRIBUTE_VALUE=10;
 	const int STARTING_VALUE = 50;
 	int pointsLeft=STARTING_POINTS;
+	const int OFFSET= 5;
+	const int LINE_HEIGHT = 20;
+	const int STAT_LABEL_WIDTH = 100;
+	const int BASEVALUE_LABEL_WIDTH = 30;
+	int statStartingY = 40;
 	
+	int attributeValueCount;
 	// Use this for initialization
 	void Start () {
 		_toon = new PlayerCharacter();
 		_toon.Awake();
-		for(var cnt= 0; cnt< Enum.GetValues(typeof(AttributeName)).Length;cnt++)
+		attributeValueCount=Enum.GetValues(typeof(AttributeName)).Length;
+		for(var cnt= 0; cnt<attributeValueCount ;cnt++)
 		{
 			_toon.GetPrimaryAttribute(cnt).BaseValue=STARTING_VALUE;
 			pointsLeft-=(STARTING_VALUE - MIN_STARTING_ATTRIBUTE_VALUE);
@@ -29,27 +36,41 @@ public class CharacterGenerator : MonoBehaviour {
 	void OnGUI() {
 		DisplayName();
 		DisplayPointsLeft();
-		DisplayAttributes();
+		var right=DisplayAttributes();
+		
 		DisplayVitals();
-		DisplaySkills();
+		DisplaySkills(right+OFFSET*2);
 	}
 	
 	void DisplayName(){
-		GUI.Label(new Rect(10,10,50,25),"Name:");
-		_toon.Name= GUI.TextField(new Rect(65,10,100,25),_toon.Name);
+		GUI.Label(new Rect(OFFSET,OFFSET,50,LINE_HEIGHT),"Name:");
+		_toon.Name= GUI.TextField(new Rect(65,OFFSET,100,LINE_HEIGHT),_toon.Name);
 	}
 	void DisplayPointsLeft(){
-		GUI.Label(new Rect(250,10,100,25),"Points Left: " + pointsLeft);
+		GUI.Label(new Rect(250,OFFSET,100,LINE_HEIGHT),"Points Left: " + pointsLeft);
 		
 	}
 	
-	void DisplayAttributes(){
+	/// <summary>
+	/// Displaies the attributes.
+	/// </summary>
+	/// <returns>
+	/// the right coordinate
+	/// </returns>
+	int DisplayAttributes(){
+		
+		var right=0;
 		for(var cnt= 0; cnt< Enum.GetValues(typeof(AttributeName)).Length;cnt++)
 		{
-			GUI.Label(new Rect(10,40+25*cnt,100,25),((AttributeName)cnt).ToString());
+			int lineTop=statStartingY+LINE_HEIGHT*cnt;
+			
+			GUI.Label(new Rect(OFFSET,lineTop,STAT_LABEL_WIDTH,LINE_HEIGHT),((AttributeName)cnt).ToString());
 			//_toon.GetPrimaryAttribute(cnt).BaseValue=
-			GUI.Label(new Rect(115,40+25*cnt,30 ,25),_toon.GetPrimaryAttribute(cnt).AdjustedBaseValue.ToString());
-			if(GUI.Button(new Rect(150,40+25*cnt,25,25),"-"))
+			GUI.Label(new Rect(STAT_LABEL_WIDTH+OFFSET,lineTop,BASEVALUE_LABEL_WIDTH ,LINE_HEIGHT),_toon.GetPrimaryAttribute(cnt).AdjustedBaseValue.ToString());
+			
+			int buttonWidth=LINE_HEIGHT; //square
+			int buttonLeft=OFFSET+STAT_LABEL_WIDTH+BASEVALUE_LABEL_WIDTH;
+			if(GUI.Button(new Rect(buttonLeft,lineTop,buttonWidth,LINE_HEIGHT),"-"))
 			{
 				if( _toon.GetPrimaryAttribute(cnt).BaseValue> MIN_STARTING_ATTRIBUTE_VALUE){
 					_toon.GetPrimaryAttribute(cnt).BaseValue--;
@@ -58,30 +79,36 @@ public class CharacterGenerator : MonoBehaviour {
 				}
 				
 			}
-			if(GUI.Button(new Rect(180,40+25*cnt,25,25),"+") && pointsLeft > 0)
+			if(GUI.Button(new Rect(buttonLeft+LINE_HEIGHT+OFFSET,lineTop,buttonWidth,LINE_HEIGHT),"+") && pointsLeft > 0)
 			{
 				_toon.GetPrimaryAttribute(cnt).BaseValue++;
 				pointsLeft--;
 				_toon.StatUpdate();
 			}
+			if(right == 0)
+				right=buttonLeft+LINE_HEIGHT+OFFSET+LINE_HEIGHT;
 		}
-	
+		
+		return right;
 	}
 	
 	void DisplayVitals(){
 		for(var cnt= 0; cnt< Enum.GetValues(typeof(VitalName)).Length;cnt++)
 		{
-			GUI.Label(new Rect(10,40+25*(cnt+7),100,25),((VitalName)cnt).ToString());
+			GUI.Label(new Rect(OFFSET,statStartingY+LINE_HEIGHT*(cnt+attributeValueCount),STAT_LABEL_WIDTH,LINE_HEIGHT),((VitalName)cnt).ToString());
 			//_toon.GetPrimaryAttribute(cnt).BaseValue=
-			GUI.Label(new Rect(115,40+25*(cnt+7),30 ,25),_toon.GetVital(cnt).AdjustedBaseValue.ToString());
+			GUI.Label(new Rect(OFFSET+STAT_LABEL_WIDTH,statStartingY+LINE_HEIGHT*(cnt+attributeValueCount),BASEVALUE_LABEL_WIDTH ,LINE_HEIGHT),_toon.GetVital(cnt).AdjustedBaseValue.ToString());
 		}
 	}
-	void DisplaySkills(){
-			for(var cnt= 0; cnt< Enum.GetValues(typeof(SkillName)).Length;cnt++)
+	void DisplaySkills(int left){
+		
+		
+		for(var cnt= 0; cnt< Enum.GetValues(typeof(SkillName)).Length;cnt++)
 		{
-			GUI.Label(new Rect(250,40+25*cnt,100,25),((SkillName)cnt).ToString());
+			int top=40+LINE_HEIGHT*cnt;
+			GUI.Label(new Rect(left,top,STAT_LABEL_WIDTH,LINE_HEIGHT),((SkillName)cnt).ToString());
 			//_toon.GetPrimaryAttribute(cnt).BaseValue=
-			GUI.Label(new Rect(355,40+25*cnt,30 ,25),_toon.GetSkill(cnt).AdjustedBaseValue.ToString());
+			GUI.Label(new Rect(left+STAT_LABEL_WIDTH+OFFSET,top,30 ,LINE_HEIGHT),_toon.GetSkill(cnt).AdjustedBaseValue.ToString());
 		}
 	}
 }
