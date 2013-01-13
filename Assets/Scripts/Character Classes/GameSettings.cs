@@ -23,24 +23,35 @@ public class GameSettings : MonoBehaviour {
 		var pcClass = pc.GetComponent<PlayerCharacter>();
 		PlayerPrefs.DeleteAll();
 		PlayerPrefs.SetString("Player Name",pcClass.Name);
-		SaveAttributes(i=> (AttributeName)i,i=> pcClass.GetPrimaryAttribute(i));
-		SaveAttributes(i=> (VitalName) i, i=> pcClass.GetVital(i));
+		for (int cnt = 0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++) {
+			SaveBaseStat(cnt,i=> (AttributeName)i,i=> pcClass.GetPrimaryAttribute(i));
+		}
+		//SaveAttributes(i=> (VitalName) i, i=> pcClass.GetVital(i));
 		for (int cnt = 0; cnt < Enum.GetValues(typeof(VitalName)).Length; cnt++) {
-			PlayerPrefs.SetInt(((VitalName)cnt).ToString() + "BaseValue",pcClass.GetVital(cnt).BaseValue);	
-			PlayerPrefs.SetInt(((VitalName)cnt).ToString()+"ExpToLevel",pcClass.GetVital(cnt).ExpToLevel);
-			PlayerPrefs.SetInt(((VitalName)cnt).ToString()+"CurValue",pcClass.GetVital(cnt).CurValue);
-			PlayerPrefs.SetFloat(((VitalName)cnt).ToString()+"LevelModifier",pcClass.GetVital(cnt).LevelModifier);
+			SaveBaseStat(cnt,i=> (VitalName)i, i=> pcClass.GetVital(i));
+			var vital=pcClass.GetVital(cnt);
+			var name=((VitalName)cnt).ToString();
+			PlayerPrefs.SetInt(name.ToString()+"CurValue",vital.CurValue);
+			PlayerPrefs.SetString(name+ "Modifiers", vital.GetModifyingAttributesToSerialize());
+			
+			
+		}
+		for (int cnt = 0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++) {
+			SaveBaseStat(cnt,i=> (SkillName)i,i=> pcClass.GetSkill(i));
+			var skill=pcClass.GetSkill(cnt);
+			var name=((SkillName)cnt).ToString();
+			PlayerPrefs.SetString(name+ "Modifiers", skill.GetModifyingAttributesToSerialize());
+			
+			
 		}
 	}
 	
-	void SaveAttributes<T>(Func<int,T> tCast, Func<int,BaseStat> getter) where T:struct{
+	void SaveBaseStat<T>(int cnt,Func<int,T> tCast, Func<int,BaseStat> getter) where T:struct{
 		if(!typeof(T).IsEnum)
 			throw new InvalidOperationException();
-		for(int cnt = 0; cnt < Enum.GetValues(typeof(T)).Length; cnt++){
 			PlayerPrefs.SetInt((tCast(cnt)).ToString()+"BaseValue",getter(cnt).BaseValue);
 			PlayerPrefs.SetInt((tCast(cnt)).ToString()+"ExpToLevel",getter(cnt).ExpToLevel);
 			PlayerPrefs.SetFloat((tCast(cnt)).ToString()+"LevelModifier",getter(cnt).LevelModifier);
-		}
 	}
 	
 	void LoadCharacterData(){

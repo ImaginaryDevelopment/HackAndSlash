@@ -35,8 +35,16 @@ public class ModifiedStat : BaseStat {
 		string temp=string.Empty;
 		//foreach(var m in _mods)
 		for (int cnt = 0; cnt < _mods.Count; cnt++) {
-			UnityEngine.Debug.Log(_mods[cnt].attribute.Name);
+			var attrib=_mods[cnt].attribute;
+			temp+= _mods[cnt].attribute.Name;
+			temp+= "_"+ _mods[cnt].ratio;
+			
+			if(cnt<_mods.Count -1)
+				temp+="|";
+			
+			
 		}
+		UnityEngine.Debug.Log(this.Name+":"+ temp);
 		return temp;
 	}
 }
