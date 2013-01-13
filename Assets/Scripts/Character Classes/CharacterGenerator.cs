@@ -58,8 +58,24 @@ public class CharacterGenerator : MonoBehaviour {
 	}
 	
 	void DisplayName(){
+		//var old
+		
+		bool valid=!string.IsNullOrEmpty(_toon.Name);
+		if(!valid)
+			using(GuiHelper.ContentColor(Color.red))
+			{
+				GUI.Label(new Rect(OFFSET+165,OFFSET,10,LINE_HEIGHT),"*");	
+			}
 		GUI.Label(new Rect(OFFSET,OFFSET,50,LINE_HEIGHT),"Name:");
-		_toon.Name= GUI.TextField(new Rect(65,OFFSET,100,LINE_HEIGHT),_toon.Name);
+		using(GuiHelper.ColorIf(Color.red,!valid))
+		{
+			
+			_toon.Name= GUI.TextField(new Rect(65,OFFSET,100,LINE_HEIGHT),_toon.Name);	
+		}
+		
+		
+		
+		
 	}
 	void DisplayPointsLeft(){
 		GUI.Label(new Rect(250,OFFSET,100,LINE_HEIGHT),"Points Left: " + pointsLeft);
@@ -126,11 +142,21 @@ public class CharacterGenerator : MonoBehaviour {
 		}
 	}
 	void DisplayCreateButton(){
-		if(GUI.Button(new Rect(Screen.width /2 - 50,statStartingY+LINE_HEIGHT*(attributeValueCount+vitalValueCount),100,LINE_HEIGHT),"Create"))
+		var displayText="Create";
+		var wasEnabled=GUI.enabled;
+		if(pointsLeft != 0 || string.IsNullOrEmpty(_toon.Name))
+		{
+			GUI.enabled=false;
+			displayText="Fill out name and spend points";
+		}
+		
+		
+		if(GUI.Button(new Rect(Screen.width /2 - 50,statStartingY+LINE_HEIGHT*(attributeValueCount+vitalValueCount),100,LINE_HEIGHT),displayText))
 		{
 			GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
 			gsScript.SaveCharacterData();
-			Application.LoadLevel("initial");
+			Application.LoadLevel("initial");	
 		}
+		GUI.enabled=wasEnabled;
 	}
 }
