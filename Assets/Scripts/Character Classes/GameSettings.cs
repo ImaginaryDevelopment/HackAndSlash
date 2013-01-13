@@ -23,7 +23,7 @@ public class GameSettings : MonoBehaviour {
 		var pcClass = pc.GetComponent<PlayerCharacter>();
 		PlayerPrefs.DeleteAll();
 		PlayerPrefs.SetString("Player Name",pcClass.Name);
-		for (int cnt = 0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++) {
+		for (int cnt = 0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++) {
 			SaveBaseStat(cnt,i=> (AttributeName)i,i=> pcClass.GetPrimaryAttribute(i));
 		}
 		//SaveAttributes(i=> (VitalName) i, i=> pcClass.GetVital(i));
@@ -53,15 +53,40 @@ public class GameSettings : MonoBehaviour {
 			PlayerPrefs.SetInt((tCast(cnt)).ToString()+"ExpToLevel",getter(cnt).ExpToLevel);
 			PlayerPrefs.SetFloat((tCast(cnt)).ToString()+"LevelModifier",getter(cnt).LevelModifier);
 	}
+	void LoadBaseStat(int cnt,string name,BaseStat stat){
+		
+		stat.BaseValue=PlayerPrefs.GetInt(name+"BaseValue",0);
+		stat.ExpToLevel=PlayerPrefs.GetInt(name+"ExpToLevel",0);
+		stat.LevelModifier=PlayerPrefs.GetFloat(name+"LevelModifier",0.0f);
+	}
 	
 	internal void LoadCharacterData(){
 		var pc = GameObject.Find("pc");
 		var pcClass = pc.GetComponent<PlayerCharacter>();
-		pcClass.Name= PlayerPrefs.GetString("Player Name");
+		
+		pcClass.Name= PlayerPrefs.GetString("Player Name","Name Me");
+		
 		for (int cnt = 0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++) {
-			pcClass.GetPrimaryAttribute(cnt).BaseValue=PlayerPrefs.GetInt(((AttributeName)cnt).ToString() + "BaseValue");	
-			pcClass.GetPrimaryAttribute(cnt).ExpToLevel=PlayerPrefs.GetInt(((AttributeName)cnt).ToString()+"ExpToLevel");
-			pcClass.GetPrimaryAttribute(cnt).LevelModifier=PlayerPrefs.GetInt(((AttributeName)cnt).ToString()+"LevelModifier");
+			var name=((AttributeName)cnt).ToString();
+			var attrib=pcClass.GetPrimaryAttribute(cnt);
+			LoadBaseStat(cnt,name,attrib);
+			Debug.Log(pcClass.GetPrimaryAttribute(cnt).Name+":" +pcClass.GetPrimaryAttribute(cnt).BaseValue+ ":");
 		}
+		
+		for (int cnt = 0; cnt < Enum.GetValues(typeof(VitalName)).Length; cnt++) {
+			var name=((VitalName)cnt).ToString();
+			var attrib=pcClass.GetVital(cnt);
+			LoadBaseStat(cnt,name,attrib);
+			attrib.CurValue=PlayerPrefs.GetInt(name+"CurValue",0);
+		}
+		
+		for (int cnt = 0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++) {
+			var name=((SkillName)cnt).ToString();
+			var attrib=pcClass.GetSkill(cnt);
+			LoadBaseStat(cnt,name,attrib);
+			//pcClass.GetSkill(cnt).BaseValue=PlayerPrefs.GetInt(name+"BaseValue",0);
+		}
+		
+		
 	}
 }

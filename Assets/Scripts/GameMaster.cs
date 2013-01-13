@@ -15,6 +15,7 @@ public class GameMaster : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		_pc=(GameObject) Instantiate(playerCharacter,Vector3.zero,Quaternion.identity);
+		_pc.name="pc";
 		_pcScript= _pc.GetComponent<PlayerCharacter>();
 		//Instantiate(playerCharacter,Vector3.zero,Quaternion.identity);
 		zOffset= -2.5f;
@@ -22,6 +23,8 @@ public class GameMaster : MonoBehaviour {
 		xRotOffset= 22.5f;
 		mainCamera.transform.position = new Vector3(_pc.transform.position.x+ xRotOffset,_pc.transform.position.y+ yOffset,_pc.transform.position.z+zOffset);
 		mainCamera.transform.Rotate(xRotOffset,0,0);
+		
+		LoadCharacter();
 	}
 	
 	// Update is called once per frame
@@ -32,8 +35,8 @@ public class GameMaster : MonoBehaviour {
 		var gs = GameObject.Find("__GameSettings");
 		if(gs == null)
 		{
-			Instantiate(gameSettings,Vector3.zero,Quaternion.identity);
-			gs.name="gameSettings";
+			gs=(GameObject) Instantiate(gameSettings,Vector3.zero,Quaternion.identity);
+			gs.name="__GameSettings";
 		}
 			
 		var gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
