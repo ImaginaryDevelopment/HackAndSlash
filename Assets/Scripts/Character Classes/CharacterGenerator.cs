@@ -154,9 +154,15 @@ public class CharacterGenerator : MonoBehaviour {
 		if(GUI.Button(new Rect(Screen.width /2 - 50,statStartingY+LINE_HEIGHT*(attributeValueCount+vitalValueCount),100,LINE_HEIGHT),displayText))
 		{
 			GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
+			UpdateCurVitalValues();
 			gsScript.SaveCharacterData();
 			Application.LoadLevel("initial");	
 		}
 		GUI.enabled=wasEnabled;
+	}
+	void UpdateCurVitalValues(){
+		for(var cnt= 0; cnt< Enum.GetValues(typeof(VitalName)).Length;cnt++){
+			_toon.GetVital(cnt).CurValue=_toon.GetVital(cnt).AdjustedBaseValue;
+		}
 	}
 }
