@@ -54,7 +54,7 @@ public class GameSettings : MonoBehaviour {
 			PlayerPrefs.SetFloat((tCast(cnt)).ToString()+"LevelModifier",getter(cnt).LevelModifier);
 	}
 	
-	void LoadCharacterData(){
+	internal void LoadCharacterData(){
 		var pc = GameObject.Find("pc");
 		var pcClass = pc.GetComponent<PlayerCharacter>();
 		pcClass.Name= PlayerPrefs.GetString("Player Name");

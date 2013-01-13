@@ -156,7 +156,7 @@ public class CharacterGenerator : MonoBehaviour {
 			GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
 			UpdateCurVitalValues();
 			gsScript.SaveCharacterData();
-			Application.LoadLevel("initial");	
+			Application.LoadLevel("Level1");	
 		}
 		GUI.enabled=wasEnabled;
 	}
