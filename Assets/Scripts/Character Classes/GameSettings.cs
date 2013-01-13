@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 public class GameSettings : MonoBehaviour {
-	
+	public const string PLAYER_SPAWN_POINT="Player Spawn Point";
 	void Awake(){
 		//survive from game scene to game scene
 		DontDestroyOnLoad(this);

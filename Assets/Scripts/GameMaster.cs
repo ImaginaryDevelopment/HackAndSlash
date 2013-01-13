@@ -9,12 +9,23 @@ public class GameMaster : MonoBehaviour {
 	public float zOffset;
 	public float yOffset;
 	public float xRotOffset;
+	Vector3 _playerSpawnPointPos;
 	
 	GameObject _pc;
 	PlayerCharacter _pcScript;
 	// Use this for initialization
 	void Start () {
-		_pc=(GameObject) Instantiate(playerCharacter,Vector3.zero,Quaternion.identity);
+		_playerSpawnPointPos= new Vector3(240,6,116);
+		var go = (GameObject) GameObject.Find(GameSettings.PLAYER_SPAWN_POINT);
+		if(go == null)
+		{
+			Debug.LogWarning("No spawn point found");
+			go =new GameObject(GameSettings.PLAYER_SPAWN_POINT);
+			
+			Debug.Log("Created Player spawn point found");
+			go.transform.position=_playerSpawnPointPos;
+		}
+		_pc=(GameObject) Instantiate(playerCharacter,go.transform.position,Quaternion.identity);
 		_pc.name="pc";
 		_pcScript= _pc.GetComponent<PlayerCharacter>();
 		//Instantiate(playerCharacter,Vector3.zero,Quaternion.identity);
@@ -42,6 +53,6 @@ public class GameMaster : MonoBehaviour {
 		var gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
 			
 		gsScript.LoadCharacterData();
-		Application.LoadLevel("initial");	
+		Application.LoadLevel("Level1");	
 	}
 }
